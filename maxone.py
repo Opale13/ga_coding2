@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from tabulate import tabulate
 
-IND_SIZE = 10
-POP_SIZE = 6
+IND_SIZE = 15
+POP_SIZE = 100
 
 # Initialising the population.
 population = []
@@ -64,14 +64,11 @@ def select(pop):
 if __name__ == '__main__':
     PROB_MATING = 0.5
     PROB_MUTATION = 0.2
-    ITERATIONS = 500
-
-    INIT_POPULATION = 100
-    INDIVIDUAL_LENGTH = 10
+    ITERATIONS = 150
 
     # Create initial population
-    for i in range(INIT_POPULATION):
-        population.append([random.randrange(2) for i in range(INDIVIDUAL_LENGTH)])
+    for i in range(POP_SIZE):
+        population.append([random.randrange(2) for i in range(IND_SIZE)])
 
 
     stats = list()
@@ -92,5 +89,8 @@ if __name__ == '__main__':
 
 
     print(tabulate(stats, headers=['Gen', 'Mean', 'Min', 'Max']))
+
+    print("Final population:\n", '\n'.join('{}: {}'.format(individual, evaluate(individual)) for individual in population), '\n')
+
     plt.plot(np.arange(ITERATIONS), [stat[1] for stat in stats])
     plt.show()
