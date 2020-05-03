@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from tabulate import tabulate
 
-IND_SIZE = 15
-POP_SIZE = 100
+IND_SIZE = 10
+POP_SIZE = 150
 
 # Initialising the population.
 population = []
@@ -20,12 +20,14 @@ def evaluate(ind):
 # Defining the mating function.
 def mate(ind1, ind2):
     assert len(ind1) == len(ind2), "ind1 & ind2 should be the same length"
+    child1 = ind1.copy()
+    child2 = ind2.copy()
 
     for i in range(len(ind1)):
         if random.random() >= PROB_MATING:
-            ind1[i], ind2[i] = ind2[i], ind1[i]
+            child1[i], child2[i] = child2[i], child1[i]
 
-    return ind1, ind2
+    return child1, child2
 
 # Defining the mutation function.
 def mutate(ind):
