@@ -26,6 +26,12 @@ def mate(ind1, ind2):
 
 # Defining the mutation function.
 def mutate(ind):
+    for i in range(len(ind)):
+        if random.random() >= PROB_MUTATION:
+            random_gene = random.randint(0, len(ind)-1)
+            ind[i], ind[random_gene] = ind[random_gene], ind[i]
+            break
+
     return ind
 
 # Defining the selection function.
@@ -70,5 +76,6 @@ if __name__ == '__main__':
 
     parents = select(population)
     print("Parents: {}".format(parents))
-    print("Children: {}".format(mate(parents[0], parents[1])))
+    # print("Children: {}".format(mate(parents[0], parents[1])))
+    print("Mutation of parent 0: {}".format(mutate(parents[0])))
     
