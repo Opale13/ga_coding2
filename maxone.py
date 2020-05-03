@@ -16,6 +16,12 @@ def evaluate(ind):
 
 # Defining the mating function.
 def mate(ind1, ind2):
+    assert len(ind1) == len(ind2), "ind1 & ind2 should be the same length"
+
+    for i in range(len(ind1)):
+        if random.random() >= PROB_MATING:
+            ind1[i], ind2[i] = ind2[i], ind1[i]
+
     return ind1, ind2
 
 # Defining the mutation function.
@@ -61,4 +67,8 @@ if __name__ == '__main__':
     # for individual in population:
     #     print("{} - {}".format(individual, evaluate(individual)))
 
-    print(select(population))
+
+    parents = select(population)
+    print("Parents: {}".format(parents))
+    print("Children: {}".format(mate(parents[0], parents[1])))
+    
