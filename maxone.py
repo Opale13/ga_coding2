@@ -3,6 +3,9 @@
 # Version: April 26, 2020
 
 import random
+import matplotlib.pyplot as plt
+import numpy as np
+from tabulate import tabulate
 
 IND_SIZE = 10
 POP_SIZE = 6
@@ -61,21 +64,33 @@ def select(pop):
 if __name__ == '__main__':
     PROB_MATING = 0.5
     PROB_MUTATION = 0.2
-    ITERATIONS = 100
+    ITERATIONS = 500
 
-    INIT_POPULATION = 10
-    INDIVIDUAL_LENGTH = 5
+    INIT_POPULATION = 100
+    INDIVIDUAL_LENGTH = 10
 
+    # Create initial population
     for i in range(INIT_POPULATION):
         population.append([random.randrange(2) for i in range(INDIVIDUAL_LENGTH)])
-    
-
-    # for individual in population:
-    #     print("{} - {}".format(individual, evaluate(individual)))
 
 
-    parents = select(population)
-    print("Parents: {}".format(parents))
-    # print("Children: {}".format(mate(parents[0], parents[1])))
-    print("Mutation of parent 0: {}".format(mutate(parents[0])))
-    
+    stats = list()
+    for i in range(ITERATIONS):
+        parents = select(population)
+        children = mate(parents[0], parents[1])
+        mutate_children = list(map(mutate, children))
+
+        for j in range(2):
+            iteration_fitness = list(map(evaluate, population))
+            del population[iteration_fitness.index(min(iteration_fitness))]
+
+        for child in mutate_children:
+            population.append(child)
+
+        iteration_fitness = np.array(list(map(evaluate, population)))
+        stats.append((i+1, np.mean(iteration_fitness), np.min(iteration_fitness), np.max(iteration_fitness)))
+
+
+    print(tabulate(stats, headers=['Gen', 'Mean', 'Min', 'Max']))
+    plt.plot(np.arange(ITERATIONS), [stat[1] for stat in stats])
+    plt.show()
