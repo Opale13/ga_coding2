@@ -1,14 +1,19 @@
 # maxone.py
 # Author: Sébastien Combéfis
 # Version: April 26, 2020
+# Modified by Ludovic Merel
 
 import random
 import matplotlib.pyplot as plt
 import numpy as np
 from tabulate import tabulate
 
+
+ITERATIONS = 150
 IND_SIZE = 10
-POP_SIZE = 150
+POP_SIZE = 10
+PROB_MATING = 0.5
+PROB_MUTATION = 0.2
 
 # Initialising the population.
 population = []
@@ -64,14 +69,9 @@ def select(pop):
 
 # Running the simulation.
 if __name__ == '__main__':
-    PROB_MATING = 0.5
-    PROB_MUTATION = 0.2
-    ITERATIONS = 150
 
     # Create initial population
-    for i in range(POP_SIZE):
-        population.append([random.randrange(2) for i in range(IND_SIZE)])
-
+    population.extend([random.randrange(2) for i in range(IND_SIZE)] for j in range(POP_SIZE))
 
     stats = list()
     for i in range(ITERATIONS):
@@ -79,12 +79,13 @@ if __name__ == '__main__':
         children = mate(parents[0], parents[1])
         mutate_children = list(map(mutate, children))
 
+        # Remove worst individuals (2)
         for j in range(2):
             iteration_fitness = list(map(evaluate, population))
             del population[iteration_fitness.index(min(iteration_fitness))]
 
-        for child in mutate_children:
-            population.append(child)
+        # Add children to population
+        population.extend(mutate_children)
 
         iteration_fitness = np.array(list(map(evaluate, population)))
         stats.append((i+1, np.mean(iteration_fitness), np.min(iteration_fitness), np.max(iteration_fitness)))
